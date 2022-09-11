@@ -1,6 +1,6 @@
 
 from typing import List
-from . import baidu, google, youdao, deepl, papago
+from . import baidu, google, youdao, deepl, papago, sugoi
 
 import googletrans
 
@@ -133,10 +133,17 @@ LANGUAGE_CODE_MAP['papago'] = {
 	'TRK': 'NONE',
 }
 
+LANGUAGE_CODE_MAP['sugoi'] = {
+	'JPN': "ja",
+	'ENG': 'en',
+}
+
 GOOGLE_CLIENT = google.Translator()
 BAIDU_CLIENT = baidu.Translator()
 YOUDAO_CLIENT = youdao.Translator()
 PAPAGO_CLIENT = papago.Translator()
+SUGOI_CLIENT = sugoi.Translator()
+
 try:
 	DEEPL_CLIENT = deepl.Translator()
 except Exception as e:
@@ -145,7 +152,7 @@ except Exception as e:
 
 
 async def dispatch(translator: str, src_lang: str, tgt_lang: str, texts: List[str], *args, **kwargs) -> List[str] :
-	if translator not in ['google', 'youdao', 'baidu', 'deepl', 'eztrans', 'papago', 'null'] :
+	if translator not in ['google', 'youdao', 'baidu', 'deepl', 'eztrans', 'papago', 'sugoi', 'null'] :
 		raise Exception
 	if translator == 'null' :
 		return texts
@@ -193,6 +200,9 @@ async def dispatch(translator: str, src_lang: str, tgt_lang: str, texts: List[st
 	elif translator == 'papago' :
 		concat_texts = '\n'.join(texts)
 		result = await PAPAGO_CLIENT.translate(src_lang, tgt_lang, concat_texts)
+	elif translator == 'sugoi' :
+		concat_texts = '\n'.join(texts)
+		result = await SUGOI_CLIENT.translate(src_lang, tgt_lang, concat_texts)
 	translated_sentences = []
 	if len(result) < len(texts) :
 		translated_sentences.extend(result)
