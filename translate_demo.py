@@ -194,7 +194,7 @@ async def infer(
 		if mode == 'web' and task_id :
 			update_state(task_id, nonce, 'render')
 		# render translated texts
-		if args.target_lang == 'ENG' and args.manga2eng:
+		if (args.target_lang == 'ENG' and args.manga2eng) or (options['tgt_lang'] == 'ENG' and args.manga2eng):
 			from text_rendering import dispatch_eng_render
 			output = await dispatch_eng_render(np.copy(img_inpainted), img, text_regions, translated_sentences, args.eng_font)
 		else:
